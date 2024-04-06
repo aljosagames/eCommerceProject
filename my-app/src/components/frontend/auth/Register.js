@@ -29,12 +29,12 @@ const Register = () => {
     };
 
     axios.get("/sanctum/csrf-cookie").then((response) => {
-      axios.post("http://localhost:8000/api/register", data).then((res) => {
+      axios.post("api/register", data).then((res) => {
         if (res.data.status === 200) {
           localStorage.setItem("auth_token", res.data.token);
           localStorage.setItem("auth_name", res.data.username);
           swal("Success", res.data.message, "success");
-          navigate("/");
+          navigate("/", {replace: true});
         } else {
           setRegister({
             ...registerInput,

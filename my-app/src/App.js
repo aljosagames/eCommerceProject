@@ -7,6 +7,10 @@ import Home from "./components/frontend/Home";
 import Login from "./components/frontend/auth/Login";
 import Register from "./components/frontend/auth/Register";
 import axios from "axios";
+import ProtectedRoutes from "./ProtectedRoutes";
+import Category from "./components/admin/category/Category";
+import ViewCategory from "./components/admin/category/ViewCategory";
+import EditCategory from "./components/admin/category/EditCategory";
 
 axios.defaults.baseURL = "http://localhost:8000/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -20,19 +24,28 @@ axios.interceptors.request.use(function (config) {
 });
 
 function App() {
+  const isAuth = () =>{
+    return localStorage.getItem("auth_token")
+  }
+
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={!isAuth() ? <Login /> : <Navigate to="/" replace/>} />
+      <Route path="/register" element={!isAuth() ? <Register /> : <Navigate to="/" replace/>} />
 
       <Route
         path="/admin"
         element={<Navigate to="/admin/dashboard" replace />}
       />
-      <Route path="/admin" element={<MasterLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="profile" element={<Profile />} />
+      <Route element={<ProtectedRoutes />}>
+        <Route path="/admin" element={<MasterLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="add-category" element={<Category />}/>
+          <Route path="view-category" element={<ViewCategory />}/>
+          <Route path="edit-category/:id" element={<EditCategory/>}/>
+        </Route>
       </Route>
     </Routes>
   );

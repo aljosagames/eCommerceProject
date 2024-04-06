@@ -2,10 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const navigate = useNavigate();
 
   const logoutSubmit = (e) => {
     e.preventDefault();
@@ -15,7 +13,7 @@ const Navbar = () => {
         localStorage.removeItem("auth_token");
         localStorage.removeItem("auth_name");
         swal("Success", res.data.message, "success");
-        navigate("/");
+        window.location.reload();
       }
     });
   };
