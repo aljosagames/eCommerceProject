@@ -28,18 +28,20 @@ const Register = () => {
       password: registerInput.password,
     };
 
-    axios.post("http://localhost:8000/api/register", data).then((res) => {
-      if (res.data.status === 200) {
-        localStorage.setItem("auth_token", res.data.token);
-        localStorage.setItem("auth_name", res.data.username);
-        swal("Success", res.data.message, "success");
-        navigate("/");
-      } else {
-        setRegister({
-          ...registerInput,
-          error_list: res.data.validation_errors,
-        });
-      }
+    axios.get("/sanctum/csrf-cookie").then((response) => {
+      axios.post("http://localhost:8000/api/register", data).then((res) => {
+        if (res.data.status === 200) {
+          localStorage.setItem("auth_token", res.data.token);
+          localStorage.setItem("auth_name", res.data.username);
+          swal("Success", res.data.message, "success");
+          navigate("/");
+        } else {
+          setRegister({
+            ...registerInput,
+            error_list: res.data.validation_errors,
+          });
+        }
+      });
     });
   };
 
@@ -81,7 +83,7 @@ const Register = () => {
                   <div className="form-gropu mb-3">
                     <label>Password</label>
                     <input
-                      type=""
+                      type="password"
                       name="password"
                       onChange={handleInput}
                       value={registerInput.password}
