@@ -31,7 +31,7 @@ class CategoryController extends Controller
             $category->description = $request->input('description');
             $category->status = $request->input('status') == true ? 1 : 0;
             $category->save();
-    
+
             return response()->json([
                 'status'=>200,
                 'message'=>"Category Added Successfully"
@@ -86,7 +86,7 @@ class CategoryController extends Controller
                 $category->description = $request->input('description');
                 $category->status = $request->input('status') == true ? 1 : 0;
                 $category->save();
-        
+
                 return response()->json([
                     'status'=>200,
                     'message'=>"Category Added Successfully"
@@ -98,6 +98,23 @@ class CategoryController extends Controller
                     'message'=>"No Category ID Found"
                 ]);
             }
+        }
+    }
+
+    public function destroy($id){
+        $category = Category::find($id);
+        if($category){
+            $category->delete();
+            return response()->json([
+                'status'=>200,
+                'message'=>"Category Deleted Successfully"
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=>404,
+                'message'=>"No Category Id Found"
+            ]);
         }
     }
 }
